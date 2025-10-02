@@ -1,71 +1,110 @@
 from flask import Flask, render_template, request, jsonify, make_response
 import requests
 import json
-from werkzeug.exceptions import NotFound
+import os
 
 app = Flask(__name__)
 
 PORT = 3201
 HOST = '0.0.0.0'
 
-with open('{}/databases/bookings.json'.format("."), "r") as jsf:
+DB_PATH = os.path.join(".", "databases", "bookings.json")
+
+with open(DB_PATH, "r") as jsf:
    bookings = json.load(jsf)["bookings"]
 
 @app.route("/", methods=['GET'])
 def home():
    return "<h1 style='color:blue'>Welcome to the Booking service!</h1>"
 
+def write(bookings):
+    with open(DB_PATH, 'w') as f:
+        json.dump({"bookings": bookings}, f, indent=2)
 
-# GET all movies
-@app.route("/movies", methods=["GET"])
-def get_movies():
-    return jsonify(movies)
+@app.route("/bookings", methods=["GET"])
+def get_bookings():
+    return jsonify(bookings)
 
-# GET one movie by id
-@app.route("/movies/<movie_id>", methods=["GET"])
-def get_movie(movie_id):
-    for m in movies:
-        if m["id"] == movie_id:
-            return jsonify(m)
-    return make_response(jsonify({"error": "Movie not found"}), 404)
+@app.route("/bookings/<userid>", methods=["GET"])
+def get_booking(userid):
+    for b in bookings:
+        if b["userid"] == userid:
+            return jsonify(b)
+    return make_response(jsonify({"error": "Booking not found"}), 404)
 
-@app.route("/movies/<movieid>", methods=['POST'])
-def add_movie(movieid):
+@app.route("/bookings/<userid>", methods=['POST'])
+def add_booking(userid):
     req = request.get_json()
 
-    for movie in movies:
-        if str(movie["id"]) == str(movieid):
-            print(movie["id"])
-            print(movieid)
-            return make_response(jsonify({"error":"movie ID already exists"}),500)
+    for booking in bookings:
+        if booking["userid"] == userid:
+            incoming_date = req["dates"][0]["date"] # On prend arbitrairement le premier élément du tableau dates
+            incoming_movies = req["dates"][0]["movies"]
 
-    movies.append(req)
-    write(movies)
-    res = make_response(jsonify({"message":"movie added"}),200)
-    return res
+            for existing_date_obj in booking["dates"]:
+                if existing_date_obj["date"] == incoming_date:
+                    for m in incoming_movies:
+                        if m not in existing_date_obj["movies"]:
+                            existing_date_obj["movies"].append(m)
+                    break
+            else:
+                booking["dates"].append(req["dates"][0])
+            break
+    else:
+        req["userid"] = userid
+        bookings.append(req)
 
-@app.route("/movies/<movieid>/<rate>/<title>", methods=['PUT'])
-def update_movie_rating(movieid, rate , title):
-    for movie in movies:
-        if str(movie["id"]) == str(movieid):
-            movie["rating"] = rate
-            movie["title"] = title
-            res = make_response(jsonify(movie),200)
-            write(movies)
-            return res
+    write(bookings)
+    return make_response(jsonify({"message": "booking added"}), 200)
 
-    res = make_response(jsonify({"error":"movie ID not found"}),500)
-    return res
+@app.route("/bookings/<userid>", methods=['DELETE'])
+def del_booking(userid):
+    incoming_date = request.args.get("date")
+    movieid = request.args.get("movieid")
 
-@app.route("/movies/<movieid>", methods=['DELETE'])
-def del_movie(movieid):
-    for movie in movies:
-        if str(movie["id"]) == str(movieid):
-            movies.remove(movie)
-            return make_response(jsonify(movie),200)
+    for booking in bookings:
+        if booking["userid"] == userid:
+            # Suppression complète de l'utilisateur si les paramètres sont absents
+            if not incoming_date and not movieid:
+                bookings.remove(booking)
+                write(bookings)
+                return make_response(jsonify(booking), 200)
 
-    res = make_response(jsonify({"error":"movie ID not found"}),500)
-    return res
+            # Suppression d'un film pour une date donnée
+            if incoming_date and movieid:
+                for existing_date in booking["dates"]:
+                    if existing_date["date"] == incoming_date:
+                        if movieid in existing_date["movies"]:
+                            deleted_obj = {
+                                "userid": userid,
+                                "date": incoming_date,
+                                "movies": [movieid]
+                            }
+
+                            existing_date["movies"].remove(movieid)
+
+                            # On supprime la date si plus aucun film n'est réservé
+                            if not existing_date["movies"]:
+                                booking["dates"].remove(existing_date)
+                                deleted_obj = {
+                                    "userid": userid,
+                                    "date": incoming_date,
+                                    "movies": [movieid]
+                                }
+
+                            # On supprime la réservation si plus aucune date n'est réservée
+                            if not booking["dates"]:
+                                bookings.remove(booking)
+
+                            write(bookings)
+                            return make_response(jsonify(deleted_obj), 200)
+                        else:
+                            return make_response(jsonify({"error": f"Movie {movieid} not found for date {incoming_date}"}), 404)
+                return make_response(jsonify({"error": f"Date {incoming_date} not found for user {userid}"}), 404)
+
+            return make_response(jsonify({"error": "Both 'date' and 'movieid' must be provided"}), 400)
+
+    return make_response(jsonify({"error": f"User {userid} not found"}), 404)
 
 if __name__ == "__main__":
    print("Server running in port %s"%(PORT))
