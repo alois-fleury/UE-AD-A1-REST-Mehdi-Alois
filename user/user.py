@@ -67,6 +67,12 @@ def user_delete(userid):
         
     return make_response(jsonify({"error":"user not found"}),500)
 
+@app.route("/users/isadmin/<user_id>", methods=["GET"])
+def is_admin(user_id):
+    user = next((u for u in users if u["id"] == user_id), None)
+    if not user:
+        return make_response(jsonify({"id": "USER_NOT_FOUND", "admin": False}, 200))
+    return make_response(jsonify({"id": user_id, "admin": user.get("admin", False)}), 200)
 
 if __name__ == "__main__":
    print("Server running in port %s"%(PORT))
