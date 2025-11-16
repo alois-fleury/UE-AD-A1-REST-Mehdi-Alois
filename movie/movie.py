@@ -2,18 +2,27 @@ from flask import Flask, request, jsonify, make_response
 import json
 import sys
 from werkzeug.exceptions import NotFound
+import os
+import sys
 
+parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+if parent_dir not in sys.path:
+    sys.path.append(parent_dir)
 app = Flask(__name__)
+
+from checkAdmin import checkAdmin
 
 PORT = 3200
 HOST = '0.0.0.0'
+BASE_DIR = os.path.dirname(os.path.abspath(__file__)) 
+DB_PATH = os.path.join(BASE_DIR, "databases", "movies.json")
 
-with open('{}/databases/movies.json'.format("."), 'r') as jsf:
+with open(DB_PATH, 'r') as jsf:
     movies = json.load(jsf)["movies"]
     print(movies)
 
 def write(movies):
-    with open('{}/databases/movies.json'.format("."), 'w') as f:
+    with open(DB_PATH, 'w') as f:
         full = {}
         full['movies']=movies
         json.dump(full, f)
@@ -40,6 +49,9 @@ def get_movie(movie_id):
 def add_movie(movieid):
     req = request.get_json()
 
+    if not (checkAdmin(request.json.get("userid"))):
+        return jsonify({"error": "Unauthorized"}), 403
+
     for movie in movies:
         if str(movie["id"]) == str(movieid):
             print(movie["id"])
@@ -51,12 +63,18 @@ def add_movie(movieid):
     res = make_response(jsonify({"message":"movie added"}),200)
     return res
 
-@app.route("/movies/<movieid>/<rate>/<title>", methods=['PUT'])
-def update_movie_rating(movieid, rate , title):
+@app.route("/movies/<movieid>", methods=['PUT'])
+def update_movie_rating(movieid):
+
+    if not (checkAdmin(request.json.get("userid"))):
+        return jsonify({"error": "Unauthorized"}), 403
+    
+    req = request.get_json()
+    
     for movie in movies:
         if str(movie["id"]) == str(movieid):
-            movie["rating"] = rate
-            movie["title"] = title
+            movie["rating"] = req.get("rating")
+            movie["title"] = req.get("title")
             res = make_response(jsonify(movie),200)
             write(movies)
             return res
@@ -64,8 +82,16 @@ def update_movie_rating(movieid, rate , title):
     res = make_response(jsonify({"error":"movie ID not found"}),500)
     return res
 
-@app.route("/movies/<movieid>", methods=['DELETE'])
-def del_movie(movieid):
+@app.route("/movies/<movieid>/<userid>", methods=['DELETE'])
+def del_movie(movieid, userid):
+
+    print("??User id trying to delete movie:", userid)
+
+    if not (checkAdmin(userid)):
+        return jsonify({"error": "Unauthorized"}), 403
+    
+    print("??Deleting movie id:", movieid)
+    
     for movie in movies:
         if str(movie["id"]) == str(movieid):
             movies.remove(movie)

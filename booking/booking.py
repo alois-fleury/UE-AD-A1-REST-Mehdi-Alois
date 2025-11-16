@@ -2,13 +2,21 @@ from flask import Flask, render_template, request, jsonify, make_response
 import requests
 import json
 import os
+import sys
+
+parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+if parent_dir not in sys.path:
+    sys.path.append(parent_dir)
+
+from checkAdmin import checkAdmin
 
 app = Flask(__name__)
 
 PORT = 3201
 HOST = '0.0.0.0'
 
-DB_PATH = os.path.join(".", "databases", "bookings.json")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__)) 
+DB_PATH = os.path.join(BASE_DIR, "databases", "bookings.json")
 
 with open(DB_PATH, "r") as jsf:
    bookings = json.load(jsf)["bookings"]
@@ -36,6 +44,9 @@ def get_booking(userid):
 def add_booking(userid):
     req = request.get_json()
 
+    if not (checkAdmin(userid) or request.json.get("userid") == userid):
+        return jsonify({"error": "Unauthorized"}), 403
+    
     for booking in bookings:
         if booking["userid"] == userid:
             incoming_date = req["dates"][0]["date"] # On prend arbitrairement le premier élément du tableau dates
@@ -61,6 +72,9 @@ def add_booking(userid):
 def del_booking(userid):
     incoming_date = request.args.get("date")
     movieid = request.args.get("movieid")
+
+    if not (checkAdmin(userid) or request.json.get("userid") == userid):
+        return jsonify({"error": "Unauthorized"}), 403
 
     for booking in bookings:
         if booking["userid"] == userid:
