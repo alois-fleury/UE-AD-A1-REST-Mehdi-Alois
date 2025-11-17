@@ -1,0 +1,365 @@
+type: collection.insomnia.rest/5.0
+name: TP1-Booking
+meta:
+  id: wrk_bd25faf2722e497fa3fa68740854264e
+  created: 1758550509117
+  modified: 1758550509117
+  description: ""
+collection:
+  - url: "{{ _.baselink }}/bookings"
+    name: Obtenir toutes les réservations 200
+    meta:
+      id: req_17625a0214304986a0c0fd4f0a674986
+      created: 1758550600501
+      modified: 1759315766019
+      isPrivate: false
+      description: ""
+      sortKey: -1758550600501
+    method: GET
+    headers:
+      - name: User-Agent
+        value: insomnia/11.6.1
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.baselink }}/bookings/:userid"
+    name: Obtenir reservation par userid 200 (dwight_schrute)
+    meta:
+      id: req_304e2bf852434ff9940e06d35be2f1ba
+      created: 1759315735809
+      modified: 1759315857157
+      isPrivate: false
+      description: ""
+      sortKey: -1758550600401
+    method: GET
+    headers:
+      - name: User-Agent
+        value: insomnia/11.6.1
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+    pathParameters:
+      - name: userid
+        value: dwight_schrute
+  - url: "{{ _.baselink }}/bookings/:userid"
+    name: Obtenir reservation par userid 404 (incorrect)
+    meta:
+      id: req_9be44b6264664409983db7647fd34d15
+      created: 1759315890595
+      modified: 1759318898793
+      isPrivate: false
+      description: ""
+      sortKey: -1758550600301
+    method: GET
+    headers:
+      - name: User-Agent
+        value: insomnia/11.6.1
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+    pathParameters:
+      - name: userid
+        value: bob_vance
+  - url: "{{ _.baselink }}/bookings/:userid"
+    name: Ajouter nouvelle reservation 200 (michael_scott)
+    meta:
+      id: req_a53eaba60859467aa4a0906d31624258
+      created: 1759315932041
+      modified: 1759422004952
+      isPrivate: false
+      description: ""
+      sortKey: -1758550600201
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+           "userid":"michael_scott",
+           "dates":[
+              {
+                 "date":"20250930",
+                 "movies":[
+                    "720d006c-3a57-4b6a-b18f-9b713b073f3c"
+                 ]
+              }
+           ]
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/11.6.1
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+    pathParameters:
+      - name: userid
+        value: michael_scott
+  - url: "{{ _.baselink }}/bookings/:userid"
+    name: Ajouter nouvelle reservation 200 (dwight_schrute)
+    meta:
+      id: req_f17865aba1c143ec8239bce13640f4f0
+      created: 1759316920624
+      modified: 1759422019489
+      isPrivate: false
+      description: ""
+      sortKey: -1758549560537
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+           "userid":"dwight_schrute",
+           "dates":[
+              {
+                 "date":"20250930",
+                 "movies":[
+                    "720d006c-3a57-4b6a-b18f-9b713b073f3c"
+                 ]
+              }
+           ]
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/11.6.1
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+    pathParameters:
+      - name: userid
+        value: dwight_schrute
+  - url: "{{ _.baselink }}/bookings/:userid"
+    name: Ajouter date existante dans réservation existante 500 (incorrect)
+    meta:
+      id: req_0375a7ba1a66403ab407f3ee13e36fca
+      created: 1759317019101
+      modified: 1759319585251
+      isPrivate: false
+      description: ""
+      sortKey: -1758549040705
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+           "userid":"dwight_schrute",
+           "dates":[
+              {
+                 "date":"20151201",
+                 "movies":[
+                    "720d006c-3a57-4b6a-b18f-9b713b073f3c"
+                 ]
+              }
+           ]
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/11.6.1
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+    pathParameters:
+      - name: userid
+        value: dwight_schrute
+  - url: "{{ _.baselink }}/bookings/:userid"
+    name: Obtenir réservation 200 (michael_scott)
+    meta:
+      id: req_4f3a99a4369f4b7cb7635213fb31340b
+      created: 1759317052925
+      modified: 1759423680548
+      isPrivate: false
+      description: ""
+      sortKey: -1758550080369
+    method: GET
+    headers:
+      - name: User-Agent
+        value: insomnia/11.6.1
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+    pathParameters:
+      - name: userid
+        value: michael_scott
+  - url: "{{ _.baselink }}/bookings/:userid"
+    name: Obtenir réservation 200 (dwight_schrute)
+    meta:
+      id: req_ccc97d1a031a4a098732b840842034ad
+      created: 1759317083065
+      modified: 1759317083065
+      isPrivate: false
+      description: ""
+      sortKey: -1758548780739
+    method: GET
+    headers:
+      - name: User-Agent
+        value: insomnia/11.6.1
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+    pathParameters:
+      - name: userid
+        value: dwight_schrute
+  - url: "{{ _.baselink }}/bookings/:userid"
+    name: Supprimer réservation entière 200
+    meta:
+      id: req_89c98fdef07f42c798be72cd97a1b2fc
+      created: 1759317101709
+      modified: 1759423538016
+      isPrivate: false
+      description: ""
+      sortKey: -1758548780639
+    method: DELETE
+    parameters:
+      - id: pair_8460176ef8ad45248468c2380c46865c
+        name: ""
+        value: ""
+        description: ""
+        disabled: false
+    headers:
+      - name: User-Agent
+        value: insomnia/11.6.1
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+    pathParameters:
+      - name: userid
+        value: michael_scott
+  - url: "{{ _.baselink }}/bookings/:userid"
+    name: Ajouter film à reservation 200 (michael_scott)
+    meta:
+      id: req_2944f911dbc14260a41c17f7e694958c
+      created: 1759422809632
+      modified: 1759422853760
+      isPrivate: false
+      description: ""
+      sortKey: -1758550340285
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+           "userid":"michael_scott",
+           "dates":[
+              {
+                 "date":"20250930",
+                 "movies":[
+                    "a8034f44-aee4-44cf-b32c-74cf452bbbb"
+                 ]
+              }
+           ]
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/11.6.1
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+    pathParameters:
+      - name: userid
+        value: michael_scott
+  - url: "{{ _.baselink }}/bookings/:userid"
+    name: Supprimer film date précise 200
+    meta:
+      id: req_d3aa9b9606414a3bb4020d97b0a92f5f
+      created: 1759423519953
+      modified: 1759423519953
+      isPrivate: false
+      description: ""
+      sortKey: -1758548650756
+    method: DELETE
+    parameters:
+      - id: pair_d56a5649e2264a64ba605363d86a5ef1
+        name: date
+        value: "20250930"
+        description: ""
+        disabled: false
+      - id: pair_700c119f491840be8307493236cbd99f
+        name: movieid
+        value: 720d006c-3a57-4b6a-b18f-9b713b073f3c
+        description: ""
+        disabled: false
+    headers:
+      - name: User-Agent
+        value: insomnia/11.6.1
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+    pathParameters:
+      - name: userid
+        value: dwight_schrute
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_c8610cad232b614d78c6e67045c185f5b282c2f4
+    created: 1758550509122
+    modified: 1758550509122
+environments:
+  name: Base Environment
+  meta:
+    id: env_c8610cad232b614d78c6e67045c185f5b282c2f4
+    created: 1758550509119
+    modified: 1759315863507
+    isPrivate: false
+  data:
+    baselink: localhost:3201

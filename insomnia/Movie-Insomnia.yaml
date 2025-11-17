@@ -1,0 +1,339 @@
+type: collection.insomnia.rest/5.0
+name: TP1-Movie
+meta:
+  id: wrk_699979dc7de8434887815ab2d85234fb
+  created: 1758288971167
+  modified: 1758548031461
+  description: ""
+collection:
+  - url: "{{ _.baselink }}/movies/:id"
+    name: Modifier note film 200 (The Good Dinosaur 7.4 > 8.3)
+    meta:
+      id: req_93d6ca1bf69b4477b7f85170d80d242e
+      created: 1758288971283
+      modified: 1763335154107
+      isPrivate: false
+      description: ""
+      sortKey: -1758288971283
+    method: PUT
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        	"director": "Peter Sohn",
+        	"id": "720d006c-3a57-4b6a-b18f-9b713b073f3c",
+        	"rating": "8.3",
+        	"title": "The Good Dinosaur",
+        	"userid": "michael_scott"
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/11.6.1
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+    pathParameters:
+      - name: id
+        value: 720d006c-3a57-4b6a-b18f-9b713b073f3c
+  - url: "{{ _.baselink }}/movies/:id"
+    name: Obtenir film par id 200 (The Good Dinosaur)
+    meta:
+      id: req_c82f4069ccf2486d9bf15fcf81a02586
+      created: 1758295312691
+      modified: 1763333981826
+      isPrivate: false
+      description: ""
+      sortKey: -1758295312691
+    method: GET
+    headers:
+      - name: User-Agent
+        value: insomnia/11.6.1
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+    pathParameters:
+      - name: id
+        value: 720d006c-3a57-4b6a-b18f-9b713b073f3c
+  - url: "{{ _.baselink }}/movies"
+    name: Obtenir JSON en entier 200
+    meta:
+      id: req_f138a89772df46c0af8bd86961fd2525
+      created: 1758295807211
+      modified: 1763333969168
+      isPrivate: false
+      description: ""
+      sortKey: -1758295807211
+    method: GET
+    headers:
+      - name: User-Agent
+        value: insomnia/11.6.1
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: http://127.0.0.1:3200/moviesbytitle
+    name: Obtenir film par titre (The Good Dinosaur)
+    meta:
+      id: req_9152b6b2f32a407fa79f43c19e1eb7b0
+      created: 1758451269773
+      modified: 1758451913741
+      isPrivate: false
+      description: ""
+      sortKey: -1758292141987
+    method: GET
+    parameters:
+      - id: pair_cc07a3fa47424836b8cc7159ec29dcf5
+        name: title
+        value: The Good Dinosaur
+        description: ""
+        disabled: false
+    headers:
+      - name: User-Agent
+        value: insomnia/11.6.1
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.baselink }}/movies/:id"
+    name: Obtenir film par id 500 (incorrect)
+    meta:
+      id: req_93df40ea706742b496c61201fbeee644
+      created: 1758451436511
+      modified: 1763333988909
+      isPrivate: false
+      description: ""
+      sortKey: -1758293727339
+    method: GET
+    headers:
+      - name: User-Agent
+        value: insomnia/11.6.1
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+    pathParameters:
+      - name: id
+        value: aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa
+  - url: "{{ _.baselink }}/moviesbytitle"
+    name: Obtenir film par titre 500 (incorrect)
+    meta:
+      id: req_6aab3cc3b8034ba998f3a32cbf5880a0
+      created: 1758451533806
+      modified: 1758547932091
+      isPrivate: false
+      description: ""
+      sortKey: -1758290556635
+    method: GET
+    parameters:
+      - id: pair_cc07a3fa47424836b8cc7159ec29dcf5
+        name: title
+        value: The Bad Dinosaur
+        description: ""
+        disabled: false
+    headers:
+      - name: User-Agent
+        value: insomnia/11.6.1
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.baselink }}/movies/:id"
+    name: Ajouter nouveau film 200
+    meta:
+      id: req_39cd6a5b3f2e46099115634e053c2cd6
+      created: 1758451568640
+      modified: 1763334305645
+      isPrivate: false
+      description: ""
+      sortKey: -1758289763959
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+          "title": "Test",
+          "rating": 1.2,
+          "director": "Someone",
+          "id":"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxx",
+        	"userid": "michael_scott"
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/11.6.1
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+    pathParameters:
+      - name: id
+        value: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxx
+  - url: http://127.0.0.1:3200/movies/:id
+    name: Obtenir film par id 200 (Test)
+    meta:
+      id: req_389766f1900a4cfaa10d895ac6b10d28
+      created: 1758451789937
+      modified: 1758452142658
+      isPrivate: false
+      description: ""
+      sortKey: -1758289367621
+    method: GET
+    headers:
+      - name: User-Agent
+        value: insomnia/11.6.1
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+    pathParameters:
+      - name: id
+        value: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxx
+  - url: "{{ _.baselink }}/movies/:id/:userid"
+    name: Supprimer test 200 (Test)
+    meta:
+      id: req_1a94bda2a6b7416d9ee869cb6106eb11
+      created: 1758452077626
+      modified: 1763335308067
+      isPrivate: false
+      description: ""
+      sortKey: -1758288971183
+    method: DELETE
+    headers:
+      - name: User-Agent
+        value: insomnia/11.6.1
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+    pathParameters:
+      - name: id
+        value: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxx
+      - name: userid
+        value: michael_scott
+  - url: "{{ _.baselink }}/movies/:id"
+    name: Ajouter nouveau film 403 (pas de userid)
+    meta:
+      id: req_b9ec510cab0e4e09bc3d636620ca0d9a
+      created: 1763334166279
+      modified: 1763334176225
+      isPrivate: false
+      description: ""
+      sortKey: -1758290160297
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+          "title": "Test",
+          "rating": 1.2,
+          "director": "Someone",
+          "id":"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxx"
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/11.6.1
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+    pathParameters:
+      - name: id
+        value: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxx
+  - url: "{{ _.baselink }}/movies/:id"
+    name: Ajouter nouveau film 403 (user non admin)
+    meta:
+      id: req_b63b9a98270e4ef197a5f63c114969cf
+      created: 1763334184292
+      modified: 1763334247023
+      isPrivate: false
+      description: ""
+      sortKey: -1758289962128
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+          "title": "Test",
+          "rating": 1.2,
+          "director": "Someone",
+          "id":"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxx",
+        	"userid": "chris_rivers"
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/11.6.1
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+    pathParameters:
+      - name: id
+        value: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxx
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_780a84de74397ee1c75cad08ce5d862ed1af5117
+    created: 1758288971187
+    modified: 1758288971187
+environments:
+  name: Base Environment
+  meta:
+    id: env_780a84de74397ee1c75cad08ce5d862ed1af5117
+    created: 1758288971185
+    modified: 1758451694579
+    isPrivate: false
+  data:
+    baselink: http://127.0.0.1:3200

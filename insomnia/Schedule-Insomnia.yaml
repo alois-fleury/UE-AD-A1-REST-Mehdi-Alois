@@ -1,0 +1,180 @@
+type: collection.insomnia.rest/5.0
+name: TP1-Schedule
+meta:
+  id: wrk_c1b2659d789648e3a791fa9252fadbd1
+  created: 1758548460090
+  modified: 1758548460090
+  description: ""
+collection:
+  - url: "{{ _.baselink }}/json"
+    name: Obtenir le JSON en entier 200
+    meta:
+      id: req_80dad7c4cc1b43a6a2a19a8c9819e371
+      created: 1758548520873
+      modified: 1758548852443
+      isPrivate: false
+      description: ""
+      sortKey: -1758548520873
+    method: GET
+    headers:
+      - name: User-Agent
+        value: insomnia/11.6.1
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+  - url: "{{ _.baselink }}/schedule/:date"
+    name: Obtenir jour par date 200 (30/11/2015)
+    meta:
+      id: req_c9a5b8ab8a7845e5ae07a37676b4c4f9
+      created: 1758548698610
+      modified: 1758548848109
+      isPrivate: false
+      description: ""
+      sortKey: -1758548520773
+    method: GET
+    headers:
+      - name: User-Agent
+        value: insomnia/11.6.1
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+    pathParameters:
+      - name: date
+        value: "20151130"
+  - url: "{{ _.baselink }}/schedule/:date"
+    name: Obtenir jour par date 500 (incorrect)
+    meta:
+      id: req_1a5ab5fd59b94ce9a0ff7afa8a15662a
+      created: 1758548868751
+      modified: 1758548883364
+      isPrivate: false
+      description: ""
+      sortKey: -1758548520723
+    method: GET
+    headers:
+      - name: User-Agent
+        value: insomnia/11.6.1
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+    pathParameters:
+      - name: date
+        value: "20241130"
+  - url: "{{ _.baselink }}/schedule/:day"
+    name: Ajouter nouveau jour 200
+    meta:
+      id: req_2e272e0fe53c44768f955df34b493dca
+      created: 1758549052593
+      modified: 1763335595810
+      isPrivate: false
+      description: ""
+      sortKey: -1758548520623
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+           "date":"20250922",
+           "movies":[
+              "96798c08-d19b-4986-a05d-7da856efb697",
+              "267eedb8-0f5d-42d5-8f43-72426b9fb3e6",
+              "39ab85e5-5e8e-4dc5-afea-65dc368bd7ab"
+           ],
+        	"userid": "michael_scott"
+        }
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/11.6.1
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+    pathParameters:
+      - name: day
+        value: "20250922"
+  - url: "{{ _.baselink }}/schedule/:date"
+    name: Obtenir jour par date 200 (22/09/2025)
+    meta:
+      id: req_fe3b52dc331f4d0390612254dc8fb001
+      created: 1758549630170
+      modified: 1758550268081
+      isPrivate: false
+      description: ""
+      sortKey: -1758548520523
+    method: GET
+    headers:
+      - name: User-Agent
+        value: insomnia/11.6.1
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+    pathParameters:
+      - name: date
+        value: "20250922"
+  - url: "{{ _.baselink }}/schedule/:date/:userid"
+    name: Supprimer date 200 (22/09/2025)
+    meta:
+      id: req_fd68e79503424b849351cb7bc0336204
+      created: 1758549670858
+      modified: 1763335746562
+      isPrivate: false
+      description: ""
+      sortKey: -1758548520423
+    method: DELETE
+    headers:
+      - name: User-Agent
+        value: insomnia/11.6.1
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+    pathParameters:
+      - name: date
+        value: "20250922"
+      - name: userid
+        value: michael_scott
+cookieJar:
+  name: Default Jar
+  meta:
+    id: jar_80fdae665c402dff8da1ce0e483d2d1c65706741
+    created: 1758548460116
+    modified: 1758548460116
+environments:
+  name: Base Environment
+  meta:
+    id: env_80fdae665c402dff8da1ce0e483d2d1c65706741
+    created: 1758548460100
+    modified: 1758548489243
+    isPrivate: false
+  data:
+    baselink: http://127.0.0.1:3202
