@@ -80,7 +80,7 @@ collection:
     meta:
       id: req_a53eaba60859467aa4a0906d31624258
       created: 1759315932041
-      modified: 1759422004952
+      modified: 1763499844879
       isPrivate: false
       description: ""
       sortKey: -1758550600201
@@ -99,6 +99,12 @@ collection:
               }
            ]
         }
+    parameters:
+      - id: pair_ffaaf95221494b4c8e7ff36fdaf704db
+        name: uid
+        value: michael_scott
+        description: ""
+        disabled: false
     headers:
       - name: Content-Type
         value: application/json
@@ -120,7 +126,7 @@ collection:
     meta:
       id: req_f17865aba1c143ec8239bce13640f4f0
       created: 1759316920624
-      modified: 1759422019489
+      modified: 1763499908777
       isPrivate: false
       description: ""
       sortKey: -1758549560537
@@ -139,6 +145,12 @@ collection:
               }
            ]
         }
+    parameters:
+      - id: pair_6ea62180f14f4512855b70ae0fd62d7f
+        name: uid
+        value: dwight_schrute
+        description: ""
+        disabled: false
     headers:
       - name: Content-Type
         value: application/json
@@ -156,11 +168,11 @@ collection:
       - name: userid
         value: dwight_schrute
   - url: "{{ _.baselink }}/bookings/:userid"
-    name: Ajouter date existante dans réservation existante 500 (incorrect)
+    name: Ajouter date existante dans réservation existante 200 (dwight_schrute)
     meta:
       id: req_0375a7ba1a66403ab407f3ee13e36fca
       created: 1759317019101
-      modified: 1759319585251
+      modified: 1763500036102
       isPrivate: false
       description: ""
       sortKey: -1758549040705
@@ -179,6 +191,12 @@ collection:
               }
            ]
         }
+    parameters:
+      - id: pair_c78b2c88c8a04c2eb868f76510f438f8
+        name: uid
+        value: dwight_schrute
+        description: ""
+        disabled: false
     headers:
       - name: Content-Type
         value: application/json
@@ -248,15 +266,15 @@ collection:
     meta:
       id: req_89c98fdef07f42c798be72cd97a1b2fc
       created: 1759317101709
-      modified: 1759423538016
+      modified: 1763500048081
       isPrivate: false
       description: ""
       sortKey: -1758548780639
     method: DELETE
     parameters:
       - id: pair_8460176ef8ad45248468c2380c46865c
-        name: ""
-        value: ""
+        name: uid
+        value: michael_scott
         description: ""
         disabled: false
     headers:
@@ -278,7 +296,7 @@ collection:
     meta:
       id: req_2944f911dbc14260a41c17f7e694958c
       created: 1759422809632
-      modified: 1759422853760
+      modified: 1763499874566
       isPrivate: false
       description: ""
       sortKey: -1758550340285
@@ -297,6 +315,12 @@ collection:
               }
            ]
         }
+    parameters:
+      - id: pair_e57501f8e90140dd93b910bf8b01b8bc
+        name: uid
+        value: michael_scott
+        description: ""
+        disabled: false
     headers:
       - name: Content-Type
         value: application/json
@@ -318,7 +342,7 @@ collection:
     meta:
       id: req_d3aa9b9606414a3bb4020d97b0a92f5f
       created: 1759423519953
-      modified: 1759423519953
+      modified: 1763500154751
       isPrivate: false
       description: ""
       sortKey: -1758548650756
@@ -332,6 +356,51 @@ collection:
       - id: pair_700c119f491840be8307493236cbd99f
         name: movieid
         value: 720d006c-3a57-4b6a-b18f-9b713b073f3c
+        description: ""
+        disabled: false
+      - id: pair_b529a28131c34073ae4e4ba8a03137d9
+        name: uid
+        value: dwight_schrute
+        description: ""
+        disabled: false
+    headers:
+      - name: User-Agent
+        value: insomnia/11.6.1
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+    pathParameters:
+      - name: userid
+        value: dwight_schrute
+  - url: "{{ _.baselink }}/bookings/:userid"
+    name: Supprimer film date précise par admin 200
+    meta:
+      id: req_490925a075d642c3a311b58cb65fb7da
+      created: 1763500159412
+      modified: 1763500174689
+      isPrivate: false
+      description: ""
+      sortKey: -1758548585814.5
+    method: DELETE
+    parameters:
+      - id: pair_d56a5649e2264a64ba605363d86a5ef1
+        name: date
+        value: "20151205"
+        description: ""
+        disabled: false
+      - id: pair_700c119f491840be8307493236cbd99f
+        name: movieid
+        value: a8034f44-aee4-44cf-b32c-74cf452aaaae
+        description: ""
+        disabled: false
+      - id: pair_b529a28131c34073ae4e4ba8a03137d9
+        name: uid
+        value: michael_scott
         description: ""
         disabled: false
     headers:
@@ -359,7 +428,7 @@ environments:
   meta:
     id: env_c8610cad232b614d78c6e67045c185f5b282c2f4
     created: 1758550509119
-    modified: 1759315863507
+    modified: 1763488630059
     isPrivate: false
   data:
-    baselink: localhost:3201
+    baselink: http://127.0.0.1:3201
