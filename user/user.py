@@ -3,6 +3,14 @@ import requests
 import json
 from werkzeug.exceptions import NotFound
 import os
+import sys
+
+parent_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+if parent_dir not in sys.path:
+    sys.path.append(parent_dir)
+app = Flask(__name__)
+
+from checkAdmin import checkAdmin
 
 app = Flask(__name__)
 
@@ -36,8 +44,12 @@ def get_user_byid(user_id):
     return make_response(jsonify({"error": "user not found"}), 404)
 
 @app.route("/users/<userid>", methods=['POST'])
-def add_movie(userid):
+def add_user(userid):
     req = request.get_json()
+
+    # L'utilisateur doit être admin pour créer un utilisateur admin
+    if (req.get("admin") == True) and (not checkAdmin(request.args.get("uid"))) :
+        return jsonify({"error": "Unauthorized"}), 403
 
     for u in users:
         if str(u['id']) == str(userid):
@@ -51,10 +63,14 @@ def add_movie(userid):
    
 @app.route("/users/<userid>/<lastactive>",methods=["PUT"])
 def user_update(userid,lastactive):
+    # L'utilisateur doit être admin pour mettre à jour un autre utilisateur
+    if not checkAdmin(request.args.get("uid")) :
+        return jsonify({"error": "Unauthorized"}), 403
+
     for u in users : 
         if str(u["id"]) == str(userid):
             u["last_active"] = lastactive
-            res = make_response(jsonify({"user updated"}),200)
+            res = make_response(jsonify({"message": "user updated"}),200)
             write(users)
             return res
         
@@ -62,6 +78,10 @@ def user_update(userid,lastactive):
 
 @app.route("/users/<userid>", methods=["DELETE"]) 
 def user_delete(userid):
+    # L'utilisateur peut supprimer son propre compte ou doit être admin
+    if (userid != request.args.get("uid")) and (not checkAdmin(request.args.get("uid"))) :
+        return jsonify({"error": "Unauthorized"}), 403
+
     for u in users : 
         if str(u["id"]) == userid :
             users.remove(u)
@@ -72,6 +92,10 @@ def user_delete(userid):
 
 @app.route("/users/isadmin/<user_id>", methods=["GET"])
 def is_admin(user_id):
+    # L'utilisateur peut vérifier son propre statut ou doit être admin
+    if (user_id != request.args.get("uid")) and (not checkAdmin(request.args.get("uid"))) :
+        return jsonify({"error": "Unauthorized"}), 403
+    
     user = next((u for u in users if u["id"] == user_id), None)
     if not user:
         return make_response(jsonify({"id": "USER_NOT_FOUND", "admin": False}, 200))
