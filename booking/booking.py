@@ -44,7 +44,7 @@ def get_booking(userid):
 def add_booking(userid):
     req = request.get_json()
 
-    if not (checkAdmin(userid) or request.json.get("userid") == userid):
+    if (userid != request.args.get("uid")) and (not checkAdmin(request.args.get("uid"))) :
         return jsonify({"error": "Unauthorized"}), 403
     
     for booking in bookings:
@@ -73,7 +73,7 @@ def del_booking(userid):
     incoming_date = request.args.get("date")
     movieid = request.args.get("movieid")
 
-    if not (checkAdmin(userid) or request.json.get("userid") == userid):
+    if (userid != request.args.get("uid")) and (not checkAdmin(request.args.get("uid"))) :
         return jsonify({"error": "Unauthorized"}), 403
 
     for booking in bookings:
