@@ -2,13 +2,16 @@ from flask import Flask, render_template, request, jsonify, make_response
 import requests
 import json
 from werkzeug.exceptions import NotFound
+import os
 
 app = Flask(__name__)
 
 PORT = 3203
 HOST = '0.0.0.0'
+BASE_DIR = os.path.dirname(os.path.abspath(__file__)) 
+DB_PATH = os.path.join(BASE_DIR, "databases", "users.json")
 
-with open('{}/databases/users.json'.format("."), "r") as jsf:
+with open(DB_PATH, "r") as jsf:
    users = json.load(jsf)["users"]
 
 @app.route("/", methods=['GET'])
@@ -16,7 +19,7 @@ def home():
    return "<h1 style='color:blue'>Welcome to the User service!</h1>"
 
 def write(users):
-    with open('{}/databases/users.json'.format("."), 'w') as f:
+    with open(DB_PATH, 'w') as f:
         full = {}
         full['users'] = users
         json.dump(full, f)
