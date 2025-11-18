@@ -29,7 +29,7 @@ def write(schedule):
 def home():
    return "<h1 style='color:blue'>Welcome to the Showtime service!</h1>"
 
-@app.route("/json", methods=['GET'])
+@app.route("/schedule", methods=['GET'])
 def get_json():
     res = make_response(jsonify(schedule), 200)
     return res
@@ -46,7 +46,7 @@ def get_schedule_by_date(date):
 def add_day(date):
     req = request.get_json()
 
-    if not (checkAdmin(req.get("userid"))):
+    if not (checkAdmin(request.args.get("uid"))):
         return jsonify({"error": "Unauthorized"}), 403
 
     for day in schedule:
@@ -61,10 +61,10 @@ def add_day(date):
     res = make_response(jsonify({"message":"day added"}),200)
     return res
 
-@app.route("/schedule/<date>/<userid>", methods=['DELETE'])
-def del_day(date, userid):
+@app.route("/schedule/<date>", methods=['DELETE'])
+def del_day(date):
 
-    if not (checkAdmin(userid)):
+    if not (checkAdmin(request.args.get("uid"))):
         return jsonify({"error": "Unauthorized"}), 403
     
     for day in schedule:

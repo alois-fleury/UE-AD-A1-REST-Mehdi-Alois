@@ -6,12 +6,12 @@ meta:
   modified: 1758548460090
   description: ""
 collection:
-  - url: "{{ _.baselink }}/json"
+  - url: "{{ _.baselink }}/schedule"
     name: Obtenir le JSON en entier 200
     meta:
       id: req_80dad7c4cc1b43a6a2a19a8c9819e371
       created: 1758548520873
-      modified: 1758548852443
+      modified: 1763497229593
       isPrivate: false
       description: ""
       sortKey: -1758548520873
@@ -80,7 +80,7 @@ collection:
     meta:
       id: req_2e272e0fe53c44768f955df34b493dca
       created: 1758549052593
-      modified: 1763335595810
+      modified: 1763497267373
       isPrivate: false
       description: ""
       sortKey: -1758548520623
@@ -97,6 +97,12 @@ collection:
            ],
         	"userid": "michael_scott"
         }
+    parameters:
+      - id: pair_276d196cfbc548818ced7cf1e9d1108f
+        name: uid
+        value: michael_scott
+        description: ""
+        disabled: false
     headers:
       - name: Content-Type
         value: application/json
@@ -137,16 +143,22 @@ collection:
     pathParameters:
       - name: date
         value: "20250922"
-  - url: "{{ _.baselink }}/schedule/:date/:userid"
+  - url: "{{ _.baselink }}/schedule/:date"
     name: Supprimer date 200 (22/09/2025)
     meta:
       id: req_fd68e79503424b849351cb7bc0336204
       created: 1758549670858
-      modified: 1763335746562
+      modified: 1763497387238
       isPrivate: false
       description: ""
       sortKey: -1758548520423
     method: DELETE
+    parameters:
+      - id: pair_b5f00777f6e24810b9478e515c3e14f8
+        name: uid
+        value: michael_scott
+        description: ""
+        disabled: false
     headers:
       - name: User-Agent
         value: insomnia/11.6.1
@@ -161,8 +173,6 @@ collection:
     pathParameters:
       - name: date
         value: "20250922"
-      - name: userid
-        value: michael_scott
 cookieJar:
   name: Default Jar
   meta:
