@@ -49,7 +49,7 @@ def get_movie(movie_id):
 def add_movie(movieid):
     req = request.get_json()
 
-    if not (checkAdmin(request.json.get("userid"))):
+    if not (checkAdmin(request.args.get("uid"))):
         return jsonify({"error": "Unauthorized"}), 403
 
     for movie in movies:
@@ -66,7 +66,7 @@ def add_movie(movieid):
 @app.route("/movies/<movieid>", methods=['PUT'])
 def update_movie_rating(movieid):
 
-    if not (checkAdmin(request.json.get("userid"))):
+    if not (checkAdmin(request.args.get("uid"))):
         return jsonify({"error": "Unauthorized"}), 403
     
     req = request.get_json()
@@ -82,16 +82,12 @@ def update_movie_rating(movieid):
     res = make_response(jsonify({"error":"movie ID not found"}),500)
     return res
 
-@app.route("/movies/<movieid>/<userid>", methods=['DELETE'])
-def del_movie(movieid, userid):
+@app.route("/movies/<movieid>", methods=['DELETE'])
+def del_movie(movieid):
 
-    print("??User id trying to delete movie:", userid)
-
-    if not (checkAdmin(userid)):
+    if not (checkAdmin(request.args.get("uid"))):
         return jsonify({"error": "Unauthorized"}), 403
-    
-    print("??Deleting movie id:", movieid)
-    
+        
     for movie in movies:
         if str(movie["id"]) == str(movieid):
             movies.remove(movie)
