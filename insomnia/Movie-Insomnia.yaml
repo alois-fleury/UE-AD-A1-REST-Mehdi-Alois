@@ -11,7 +11,7 @@ collection:
     meta:
       id: req_93d6ca1bf69b4477b7f85170d80d242e
       created: 1758288971283
-      modified: 1763335154107
+      modified: 1763498359543
       isPrivate: false
       description: ""
       sortKey: -1758288971283
@@ -23,9 +23,14 @@ collection:
         	"director": "Peter Sohn",
         	"id": "720d006c-3a57-4b6a-b18f-9b713b073f3c",
         	"rating": "8.3",
-        	"title": "The Good Dinosaur",
-        	"userid": "michael_scott"
+        	"title": "The Good Dinosaur"
         }
+    parameters:
+      - id: pair_022006e00fff4c779bf40fc1f78757e4
+        name: uid
+        value: michael_scott
+        description: ""
+        disabled: false
     headers:
       - name: Content-Type
         value: application/json
@@ -170,7 +175,7 @@ collection:
     meta:
       id: req_39cd6a5b3f2e46099115634e053c2cd6
       created: 1758451568640
-      modified: 1763334305645
+      modified: 1763498234635
       isPrivate: false
       description: ""
       sortKey: -1758289763959
@@ -182,9 +187,14 @@ collection:
           "title": "Test",
           "rating": 1.2,
           "director": "Someone",
-          "id":"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxx",
-        	"userid": "michael_scott"
+          "id":"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxx"
         }
+    parameters:
+      - id: pair_f10fd043dc6c4ec089b426d2fdec0aa8
+        name: uid
+        value: michael_scott
+        description: ""
+        disabled: false
     headers:
       - name: Content-Type
         value: application/json
@@ -225,16 +235,22 @@ collection:
     pathParameters:
       - name: id
         value: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxx
-  - url: "{{ _.baselink }}/movies/:id/:userid"
+  - url: "{{ _.baselink }}/movies/:id"
     name: Supprimer test 200 (Test)
     meta:
       id: req_1a94bda2a6b7416d9ee869cb6106eb11
       created: 1758452077626
-      modified: 1763335308067
+      modified: 1763497617013
       isPrivate: false
       description: ""
       sortKey: -1758288971183
     method: DELETE
+    parameters:
+      - id: pair_8aa1c69eb8c24cb4b4661e2eda80f3c8
+        name: uid
+        value: michael_scott
+        description: ""
+        disabled: false
     headers:
       - name: User-Agent
         value: insomnia/11.6.1
@@ -249,14 +265,12 @@ collection:
     pathParameters:
       - name: id
         value: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxx
-      - name: userid
-        value: michael_scott
   - url: "{{ _.baselink }}/movies/:id"
-    name: Ajouter nouveau film 403 (pas de userid)
+    name: Ajouter nouveau film 403 (pas de uid)
     meta:
       id: req_b9ec510cab0e4e09bc3d636620ca0d9a
       created: 1763334166279
-      modified: 1763334176225
+      modified: 1763497565469
       isPrivate: false
       description: ""
       sortKey: -1758290160297
@@ -270,6 +284,12 @@ collection:
           "director": "Someone",
           "id":"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxx"
         }
+    parameters:
+      - id: pair_382162c893d6456cba3bfa2876812c8b
+        name: ""
+        value: ""
+        description: ""
+        disabled: false
     headers:
       - name: Content-Type
         value: application/json
@@ -291,7 +311,7 @@ collection:
     meta:
       id: req_b63b9a98270e4ef197a5f63c114969cf
       created: 1763334184292
-      modified: 1763334247023
+      modified: 1763498217455
       isPrivate: false
       description: ""
       sortKey: -1758289962128
@@ -303,9 +323,14 @@ collection:
           "title": "Test",
           "rating": 1.2,
           "director": "Someone",
-          "id":"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxx",
-        	"userid": "chris_rivers"
+          "id":"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxx"
         }
+    parameters:
+      - id: pair_0ba26d7cdca44da6ae000d034f225cfb
+        name: uid
+        value: chris_rivers
+        description: ""
+        disabled: false
     headers:
       - name: Content-Type
         value: application/json
