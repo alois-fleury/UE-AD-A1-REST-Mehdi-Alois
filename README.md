@@ -17,6 +17,8 @@ Il faut ensuite installer les packages nécessaires au projet (attention à bien
 
 ### Lancement d'un projet déjà initialisé
 
+#### Sans Docker
+
 Pour lancer chaque microservice : se placer dans le dossier et exécuter le fichier du même nom avec Python. Exemple sur Windows :
 ```bash
 cd .\booking\
@@ -24,6 +26,12 @@ python .\booking.py
 ```
 
 Attention, il faut bien veiller à ce que le service user soit lancé lorsqu'on veut tester (car pour certaines requêtes, les droits utilisateurs sont vérifiés).
+
+#### Avec Docker
+
+Il faut se placer à la racine du projet et faire la commande
+
+    docker-compose up -d
 
 ## Architecture utilisée
 
