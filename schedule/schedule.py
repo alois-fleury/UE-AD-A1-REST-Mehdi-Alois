@@ -55,7 +55,6 @@ def add_day(date):
             print(day)
             return make_response(jsonify({"error":"day already exists"}),500)
 
-    req.pop("userid")
     schedule.append(req)
     write(schedule)
     res = make_response(jsonify({"message":"day added"}),200)
