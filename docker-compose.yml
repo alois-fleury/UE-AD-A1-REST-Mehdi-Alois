@@ -1,26 +1,22 @@
 services:
-
   user:
     build: 
       context: .
       dockerfile: ./user/Dockerfile
     ports:
       - "3203:3203"
-
   movie:
     build: 
       context: .
       dockerfile: ./movie/Dockerfile
     ports:
       - "3200:3200"
-  
   schedule:
     build: 
       context: .
       dockerfile: ./schedule/Dockerfile
     ports:
       - "3202:3202"
-
   booking:
     build: 
       context: .
