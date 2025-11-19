@@ -8,7 +8,7 @@
 
 Il faut créer et lancer un environnement virtuel Python en faisant
 
-    python3 -m venv venv
+    python -m venv .venv
     .\venv\Scripts\activate
 
 Il faut ensuite installer les packages nécessaires au projet (attention à bien être dans l'environnement virtuel)
@@ -31,7 +31,7 @@ Attention, il faut bien veiller à ce que le service user soit lancé lorsqu'on 
 
 Il faut se placer à la racine du projet et faire la commande
 
-    docker-compose up -d
+    docker-compose up -d --build
 
 ## Architecture utilisée
 
