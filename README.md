@@ -34,5 +34,3 @@ L'architecture suivie est en microservices et son schéma est le suivant :
 ## Tests et exemples
 
 Les tests ont été réalisés sur Insomnia (voir dossier [./insomnia](./insomnia)).
-
-Pour la première partie ne vous souciez pas des fichiers Docker, cela sera abordé par la suite en séance 4.
