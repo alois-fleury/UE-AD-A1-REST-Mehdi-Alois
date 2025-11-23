@@ -1,0 +1,261 @@
+openapi: 3.1.1
+info:
+  title: Booking REST microservice
+  summary: API of the Booking service
+  description: Fully updated documentation matching the real Booking service implementation.
+  version: 1.0.0
+
+tags:
+  - name: developers
+    description: Public booking endpoints
+  - name: admins
+    description: Admin-only calls
+
+servers:
+  - url: http://localhost:3201
+
+paths:
+  /:
+    get:
+      tags: [developers]
+      summary: Home page
+      operationId: home
+      responses:
+        "200":
+          description: Welcome message
+          content:
+            text/html:
+              schema:
+                type: string
+                example: "<h1 style='color:blue'>Welcome to the Booking service!</h1>"
+
+  /bookings:
+    get:
+      tags: [developers]
+      summary: Get all bookings
+      operationId: get_bookings
+      responses:
+        "200":
+          description: List of all bookings
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Booking'
+
+  /bookings/{userid}:
+    get:
+      tags: [developers]
+      summary: Get booking details for a user
+      description: >
+        Returns booking details with movie information fetched from the Movie service.
+      operationId: get_booking
+      parameters:
+        - name: userid
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Booking with expanded movie details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  dates:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        date:
+                          type: string
+                          example: "2025-03-12"
+                        movies:
+                          type: array
+                          description: Movies returned from Movie service
+                          items:
+                            $ref: '#/components/schemas/MovieItem'
+        "404":
+          description: Booking not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    post:
+      tags: [admins]
+      summary: Create or update a booking for a user
+      description: >
+        A user may book one or several movies for a given date.  
+        - If the userid matches uid OR uid is admin, booking is allowed.  
+        - If booking exists: merges new movies with existing dates.  
+        - Validates movie scheduling using the Schedule service.
+      operationId: add_booking
+      parameters:
+        - name: userid
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: uid
+          in: query
+          required: true
+          schema:
+            type: string
+            description: User ID or admin ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookingInput'
+      responses:
+        "200":
+          description: Booking added or updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: booking added
+        "403":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "409":
+          description: Invalid booking request (movie not scheduled or date invalid)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    delete:
+      tags: [admins]
+      summary: Delete all or part of a user's booking
+      description: >
+        - If only userid is provided: deletes entire booking record  
+        - If date and movieid are provided: deletes that movie for that date  
+        - If date becomes empty, it is removed  
+        - If no dates remain, booking is removed entirely  
+      operationId: del_booking
+      parameters:
+        - name: userid
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: uid
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: date
+          in: query
+          required: false
+          schema:
+            type: string
+            example: "2025-03-12"
+        - name: movieid
+          in: query
+          required: false
+          schema:
+            type: string
+            example: "39ab85e5-5e8e-4dc5-afea-65dc368bd7ab"
+      responses:
+        "200":
+          description: Booking or part of it deleted
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  userid: user123
+                  date: "2025-03-12"
+                  movies: ["movie123"]
+        "400":
+          description: Missing parameters (date + movieid must be together)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "403":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "404":
+          description: Booking, date, or movie not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  schemas:
+    Booking:
+      type: object
+      required: [userid, dates]
+      properties:
+        userid:
+          type: string
+          example: michael_scott
+        dates:
+          type: array
+          items:
+            type: object
+            required: [date, movies]
+            properties:
+              date:
+                type: string
+                example: "20250312"
+              movies:
+                type: array
+                items:
+                  type: string
+                  example: "720d006c-3a57-4b6a-b18f-9b713b073f3c"
+
+    BookingInput:
+      type: object
+      required: [dates]
+      properties:
+        dates:
+          type: array
+          items:
+            type: object
+            required: [date, movies]
+            properties:
+              date:
+                type: string
+                example: "20250312"
+              movies:
+                type: array
+                items:
+                  type: string
+
+    MovieItem:
+      type: object
+      description: Movie details retrieved from Movie service
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        director:
+          type: string
+        rating:
+          type: number
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          example: Not found

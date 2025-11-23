@@ -1,0 +1,275 @@
+openapi: 3.1.1
+info:
+  title: User REST microservice
+  summary: API of the User service
+  version: 1.0.0
+  description: Fully accurate OpenAPI specification matching the real code behavior.
+
+tags:
+  - name: developers
+    description: Public user endpoints
+  - name: admins
+    description: Admin-only or privileged operations
+
+servers:
+  - url: http://localhost:3203
+
+paths:
+  /:
+    get:
+      tags: [developers]
+      summary: Home page
+      operationId: user_home
+      responses:
+        "200":
+          description: Welcome page
+          content:
+            text/html:
+              schema:
+                type: string
+                example: "<h1 style='color:blue'>Welcome to the User service!</h1>"
+
+  /users:
+    get:
+      tags: [developers]
+      summary: Get all users
+      operationId: get_users
+      responses:
+        "200":
+          description: List of all users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+
+  /users/{user_id}:
+    get:
+      tags: [developers]
+      summary: Get a user by ID
+      operationId: get_user_by_id
+      parameters:
+        - in: path
+          name: user_id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: User found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "404":
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+    post:
+      tags: [admins]
+      summary: Create a new user
+      description: |
+        Creates a user with a specific ID.  
+        - If `admin=true` in the body, the requester must be admin (`?uid=<adminID>`).  
+        - If the user ID already exists, a 500 error is returned.
+      operationId: add_user
+      parameters:
+        - in: path
+          name: userid
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: uid
+          required: false
+          schema:
+            type: string
+            description: ID of the requester (used for admin validation)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+      responses:
+        "200":
+          description: User added successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: user added
+        "403":
+          description: Unauthorized (attempt to create an admin user)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: User ID already exists
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /users/{userid}/{lastactive}:
+    put:
+      tags: [admins]
+      summary: Update a user's last active timestamp
+      operationId: update_user_last_active
+      parameters:
+        - in: path
+          name: userid
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: lastactive
+          required: true
+          schema:
+            type: string
+            example: "2025-03-12T10:45:00"
+        - in: query
+          name: uid
+          required: false
+          schema:
+            type: string
+            description: ID of requester (must be admin)
+      responses:
+        "200":
+          description: User updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: user updated
+        "403":
+          description: Unauthorized (must be admin)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /users/{userid}:
+    delete:
+      tags: [developers]
+      summary: Delete a user
+      description: |
+        A user may delete their own account.  
+        An admin may delete any user.
+      operationId: delete_user
+      parameters:
+        - in: path
+          name: userid
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: uid
+          required: false
+          schema:
+            type: string
+            description: ID of requester (either same as target user or admin)
+      responses:
+        "200":
+          description: User deleted successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "403":
+          description: Unauthorized — only self or admin can delete
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /users/isadmin/{user_id}:
+    get:
+      tags: [developers]
+      summary: Check if a user is admin
+      description: |
+        A user may check their own admin status.  
+        An admin may check anyone's admin status.
+      operationId: check_admin_status
+      parameters:
+        - in: path
+          name: user_id
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: uid
+          required: false
+          schema:
+            type: string
+            description: ID of requester
+      responses:
+        "200":
+          description: Admin status returned
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  admin:
+                    type: boolean
+                example:
+                  id: "user123"
+                  admin: true
+        "403":
+          description: Unauthorized (neither owner nor admin)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+components:
+  schemas:
+    User:
+      type: object
+      required: [id]
+      properties:
+        id:
+          type: string
+          example: "michael_scott"
+        name:
+          type: string
+          example: Michael Scott
+        admin:
+          type: boolean
+          example: false
+        last_active:
+          type: string
+          example: "1360031325"
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          example: Unauthorized

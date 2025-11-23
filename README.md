@@ -78,3 +78,5 @@ L'architecture suivie est en microservices et son schéma est le suivant :
 Les tests ont été réalisés sur Insomnia (voir dossier [./insomnia](./insomnia)). Il y a un fichier de test par microservice. Certains tests renvoient des cas d'erreur. Une variable d'environnement Insomnia `baselink` permet de ne pas recopier le lien sur chaque requête, elle est importée avec chaque fichier.
 
 Dans la base d'utilisateurs par défaut, seuls `michael_scott` et `dwight_schrute` sont administrateurs.
+
+Certaines parties du projet (comme la documentation OpenAPI ou les accès à la base de données) ont été réalisées à l'aide de ChatGPT.

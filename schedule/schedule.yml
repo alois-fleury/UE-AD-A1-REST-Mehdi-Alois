@@ -1,0 +1,198 @@
+openapi: 3.1.1
+info:
+  title: Schedule REST microservice
+  summary: API of the Showtime (Schedule) service
+  description: Fully updated documentation matching the real Schedule service implementation.
+  version: 1.0.0
+
+tags:
+  - name: developers
+    description: Public schedule endpoints
+  - name: admins
+    description: Admin-only operations
+
+servers:
+  - url: http://localhost:3202
+
+paths:
+  /:
+    get:
+      tags: [developers]
+      summary: Home page
+      operationId: home
+      responses:
+        "200":
+          description: Welcome message
+          content:
+            text/html:
+              schema:
+                type: string
+                example: "<h1 style='color:blue'>Welcome to the Showtime service!</h1>"
+
+  /schedule:
+    get:
+      tags: [developers]
+      summary: Get full schedule database
+      operationId: get_full_schedule
+      responses:
+        "200":
+          description: Complete list of scheduled days
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ScheduledDay'
+
+  /schedule/{date}:
+    get:
+      tags: [developers]
+      summary: Get schedule for a specific date
+      operationId: get_schedule_by_date
+      parameters:
+        - name: date
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "2025-03-12"
+      responses:
+        "200":
+          description: Schedule found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScheduledDay'
+        "500":
+          description: Schedule not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    post:
+      tags: [admins]
+      summary: Add a new schedule day
+      description: >
+        Requires admin access (`?uid=`).  
+        Adds a new schedule for a date, verifying that every movie ID exists in the Movie service.
+      operationId: add_day
+      parameters:
+        - name: date
+          in: path
+          required: true
+          schema:
+            type: string
+            example: "2025-03-12"
+        - name: uid
+          in: query
+          required: true
+          schema:
+            type: string
+            description: Admin ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScheduleInput'
+      responses:
+        "200":
+          description: Day added successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: day added
+        "403":
+          description: Unauthorized (not admin)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Day already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "409":
+          description: One or more movies in the request do not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    delete:
+      tags: [admins]
+      summary: Delete a scheduled day
+      operationId: delete_day
+      parameters:
+        - name: date
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: uid
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Day deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScheduledDay'
+        "403":
+          description: Unauthorized (not admin)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        "500":
+          description: Day not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  schemas:
+    ScheduledDay:
+      type: object
+      required: [date, movies]
+      properties:
+        date:
+          type: string
+          example: "20250312"
+        movies:
+          type: array
+          description: List of movie IDs scheduled for that date
+          items:
+            type: string
+            example: "720d006c-3a57-4b6a-b18f-9b713b073f3c"
+
+    ScheduleInput:
+      type: object
+      required: [date, movies]
+      properties:
+        date:
+          type: string
+          example: "20250312"
+        movies:
+          type: array
+          items:
+            type: string
+            example: "720d006c-3a57-4b6a-b18f-9b713b073f3c"
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          example: Schedule day not found
