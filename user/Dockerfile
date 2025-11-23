@@ -13,6 +13,7 @@ COPY user/ .
 
 # copie le fichier checkAdmin
 COPY checkAdmin.py .
+COPY .env .
 
 # start user.py when the container is started
 CMD ["python", "user.py"]

@@ -11,33 +11,29 @@ if parent_dir not in sys.path:
 app = Flask(__name__)
 
 from checkAdmin import checkAdmin
+from db import get_db
+from dotenv import load_dotenv
+load_dotenv()
 
 app = Flask(__name__)
 
 PORT = 3203
 HOST = '0.0.0.0'
-BASE_DIR = os.path.dirname(os.path.abspath(__file__)) 
-DB_PATH = os.path.join(BASE_DIR, "databases", "users.json")
 
-with open(DB_PATH, "r") as jsf:
-   users = json.load(jsf)["users"]
+db = get_db()
 
 @app.route("/", methods=['GET'])
 def home():
    return "<h1 style='color:blue'>Welcome to the User service!</h1>"
 
-def write(users):
-    with open(DB_PATH, 'w') as f:
-        full = {}
-        full['users'] = users
-        json.dump(full, f)
-
 @app.route("/users", methods=["GET"])
 def get_users():
+    users = db.load()
     return jsonify(users)
 
 @app.route("/users/<user_id>", methods=["GET"])
 def get_user_byid(user_id):
+    users = db.load()
     for u in users :
         if u["id"] == user_id :
             return jsonify(u) 
@@ -50,6 +46,7 @@ def add_user(userid):
     # L'utilisateur doit être admin pour créer un utilisateur admin
     if (req.get("admin") == True) and (not checkAdmin(request.args.get("uid"))) :
         return jsonify({"error": "Unauthorized"}), 403
+    users = db.load()
 
     for u in users:
         if str(u['id']) == str(userid):
@@ -58,7 +55,7 @@ def add_user(userid):
             return make_response(jsonify({"error" : "user ID already exists"}),500)
 
     users.append(req)
-    write(users)
+    db.write(users)
     return make_response(jsonify({"message":"user added"}),200)
    
 @app.route("/users/<userid>/<lastactive>",methods=["PUT"])
@@ -66,12 +63,12 @@ def user_update(userid,lastactive):
     # L'utilisateur doit être admin pour mettre à jour un autre utilisateur
     if not checkAdmin(request.args.get("uid")) :
         return jsonify({"error": "Unauthorized"}), 403
-
+    users = db.load()
     for u in users : 
         if str(u["id"]) == str(userid):
             u["last_active"] = lastactive
             res = make_response(jsonify({"message": "user updated"}),200)
-            write(users)
+            db.write(users)
             return res
         
     return make_response(jsonify({"user not found"}),500)
@@ -81,11 +78,11 @@ def user_delete(userid):
     # L'utilisateur peut supprimer son propre compte ou doit être admin
     if (userid != request.args.get("uid")) and (not checkAdmin(request.args.get("uid"))) :
         return jsonify({"error": "Unauthorized"}), 403
-
+    users = db.load()
     for u in users : 
         if str(u["id"]) == userid :
             users.remove(u)
-            write(users)
+            db.write(users)
             return make_response(jsonify(u),200)
         
     return make_response(jsonify({"error":"user not found"}),500)
@@ -95,7 +92,7 @@ def is_admin(user_id):
     # L'utilisateur peut vérifier son propre statut ou doit être admin
     if (user_id != request.args.get("uid")) and (not checkAdmin(request.args.get("uid"))) :
         return jsonify({"error": "Unauthorized"}), 403
-    
+    users = db.load()
     user = next((u for u in users if u["id"] == user_id), None)
     if not user:
         return make_response(jsonify({"id": "USER_NOT_FOUND", "admin": False}, 200))

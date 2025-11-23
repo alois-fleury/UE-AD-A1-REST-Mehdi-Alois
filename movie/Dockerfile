@@ -13,6 +13,7 @@ COPY movie/ .
 
 # copie le fichier checkAdmin
 COPY checkAdmin.py .
+COPY .env .
 
 # start movie.py when the container is started
 CMD ["python", "movie.py"]

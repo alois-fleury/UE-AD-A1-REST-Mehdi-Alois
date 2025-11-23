@@ -13,6 +13,7 @@ COPY schedule/ .
 
 # copie le fichier checkAdmin
 COPY checkAdmin.py .
+COPY .env .
 
 # start schedule.py when the container is started
 CMD ["python", "schedule.py"]

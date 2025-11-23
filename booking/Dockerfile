@@ -13,6 +13,7 @@ COPY booking/ .
 
 # copie le fichier checkAdmin
 COPY checkAdmin.py .
+COPY .env .
 
 # start booking.py when the container is started
 CMD ["python", "booking.py"]

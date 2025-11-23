@@ -10,20 +10,14 @@ if parent_dir not in sys.path:
 app = Flask(__name__)
 
 from checkAdmin import checkAdmin
+from db import get_db
+from dotenv import load_dotenv
+load_dotenv()
 
 PORT = 3202
 HOST = '0.0.0.0'
-BASE_DIR = os.path.dirname(os.path.abspath(__file__)) 
-DB_PATH = os.path.join(BASE_DIR, "databases", "times.json")
 
-with open(DB_PATH, "r") as jsf:
-   schedule = json.load(jsf)["schedule"]
-
-def write(schedule):
-    with open(DB_PATH, 'w') as f:
-        full = {}
-        full['schedule']=schedule
-        json.dump(full, f)
+db = get_db()
 
 @app.route("/", methods=['GET'])
 def home():
@@ -31,11 +25,13 @@ def home():
 
 @app.route("/schedule", methods=['GET'])
 def get_json():
+    schedule = db.load()
     res = make_response(jsonify(schedule), 200)
     return res
 
 @app.route("/schedule/<date>", methods=['GET'])
 def get_schedule_by_date(date):
+    schedule = db.load()
     for day in schedule:
         if str(day["date"]) == str(date):
             res = make_response(jsonify(day),200)
@@ -48,7 +44,7 @@ def add_day(date):
 
     if not (checkAdmin(request.args.get("uid"))):
         return jsonify({"error": "Unauthorized"}), 403
-
+    schedule = db.load()
     for day in schedule:
         if str(day["date"]) == str(date):
             print(day["date"])
@@ -56,7 +52,7 @@ def add_day(date):
             return make_response(jsonify({"error":"day already exists"}),500)
 
     schedule.append(req)
-    write(schedule)
+    db.write(schedule)
     res = make_response(jsonify({"message":"day added"}),200)
     return res
 
@@ -65,11 +61,11 @@ def del_day(date):
 
     if not (checkAdmin(request.args.get("uid"))):
         return jsonify({"error": "Unauthorized"}), 403
-    
+    schedule = db.load()
     for day in schedule:
         if str(day["date"]) == str(date):
             schedule.remove(day)
-            write(schedule)
+            db.write(schedule)
             return make_response(jsonify(day),200)
 
     res = make_response(jsonify({"error":"day not found"}),500)
