@@ -17,6 +17,8 @@ app = Flask(__name__)
 
 PORT = 3201
 HOST = '0.0.0.0'
+MOVIE_SERVICE_URL=os.getenv("MOVIE_SERVICE_URL", "http://127.0.0.1:3200")
+SCHEDULE_SERVICE_URL = os.getenv("SCHEDULE_SERVICE_URL", "http://127.0.0.1:3202")
 
 db = get_db()
 
@@ -32,9 +34,20 @@ def get_bookings():
 @app.route("/bookings/<userid>", methods=["GET"])
 def get_booking(userid):
     bookings = db.load()
-    for b in bookings:
-        if b["userid"] == userid:
-            return jsonify(b)
+    for booking in bookings:
+        if booking["userid"] == userid:
+            dates_with_details = []
+            for date in booking.get("dates"):
+                movies_details = []
+                for movie_id in date.get("movies", []):
+                    resp = requests.get(f"{MOVIE_SERVICE_URL}/movies/{movie_id}")
+                    if resp.status_code == 200:
+                        movies_details.append(resp.json())
+                dates_with_details.append({
+                    "date": date["date"],
+                    "movies": movies_details
+                })
+            return jsonify({"dates": dates_with_details})
     return make_response(jsonify({"error": "Booking not found"}), 404)
 
 @app.route("/bookings/<userid>", methods=['POST'])
@@ -44,10 +57,23 @@ def add_booking(userid):
     if (userid != request.args.get("uid")) and (not checkAdmin(request.args.get("uid"))) :
         return jsonify({"error": "Unauthorized"}), 403
     bookings = db.load()
+
+    # On considère qu'un utilisateur réserve pour aller voir un film à la fois
+    incoming_date = req["dates"][0]["date"] # On prend arbitrairement le premier élément du tableau dates
+    incoming_movies = req["dates"][0]["movies"]
+    scheduled_response = requests.get(f"{SCHEDULE_SERVICE_URL}/schedule/{incoming_date}")
+    scheduled = scheduled_response.json()
+    if (not scheduled) or (scheduled.get("date", "") == ""):
+        return make_response({"error": "No film scheduled on this date"}, 409)
+
+    # Vérifie si le film est prévu à la date donnée
+    scheduled_movie_ids = scheduled.get("movies", [])
+    for movie_id in incoming_movies:
+        if movie_id not in scheduled_movie_ids:
+            return make_response({"error": "Film not scheduled for the requested date"}, 409)
+
     for booking in bookings:
         if booking["userid"] == userid:
-            incoming_date = req["dates"][0]["date"] # On prend arbitrairement le premier élément du tableau dates
-            incoming_movies = req["dates"][0]["movies"]
 
             for existing_date_obj in booking["dates"]:
                 if existing_date_obj["date"] == incoming_date:

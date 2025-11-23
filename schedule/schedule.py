@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, jsonify, make_response
 import json
 from werkzeug.exceptions import NotFound
+import requests
 import os
 import sys
 
@@ -16,6 +17,7 @@ load_dotenv()
 
 PORT = 3202
 HOST = '0.0.0.0'
+MOVIE_SERVICE_URL = os.getenv("MOVIE_SERVICE_URL", "http://127.0.0.1:3200")
 
 db = get_db()
 
@@ -47,9 +49,14 @@ def add_day(date):
     schedule = db.load()
     for day in schedule:
         if str(day["date"]) == str(date):
-            print(day["date"])
-            print(day)
             return make_response(jsonify({"error":"day already exists"}),500)
+    
+    resp = requests.get(f"{MOVIE_SERVICE_URL}/movies")
+    movies = resp.json()          
+    existing_movie_ids = [movie["id"] for movie in movies]
+    for movie_id in req.get("movies"):
+        if movie_id not in existing_movie_ids:
+            return make_response({"error": "A film in the day doesn't exist"}, 409)
 
     schedule.append(req)
     db.write(schedule)
