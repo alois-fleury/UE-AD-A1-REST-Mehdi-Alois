@@ -1,15 +1,16 @@
 type: collection.insomnia.rest/5.0
-name: TP1-Movie
+schema_version: "5.1"
+name: TP-REST-Movie
 meta:
-  id: wrk_699979dc7de8434887815ab2d85234fb
-  created: 1758288971167
-  modified: 1758548031461
+  id: wrk_6395872735d247f39a3a416b8a2708e1
+  created: 1763586362576
+  modified: 1763867023292
   description: ""
 collection:
   - url: "{{ _.baselink }}/movies/:id"
     name: Modifier note film 200 (The Good Dinosaur 7.4 > 8.3)
     meta:
-      id: req_93d6ca1bf69b4477b7f85170d80d242e
+      id: req_18205960292d4a5a9a6a593e64801152
       created: 1758288971283
       modified: 1763498359543
       isPrivate: false
@@ -26,10 +27,8 @@ collection:
         	"title": "The Good Dinosaur"
         }
     parameters:
-      - id: pair_022006e00fff4c779bf40fc1f78757e4
-        name: uid
+      - name: uid
         value: michael_scott
-        description: ""
         disabled: false
     headers:
       - name: Content-Type
@@ -50,7 +49,7 @@ collection:
   - url: "{{ _.baselink }}/movies/:id"
     name: Obtenir film par id 200 (The Good Dinosaur)
     meta:
-      id: req_c82f4069ccf2486d9bf15fcf81a02586
+      id: req_c5b04814765249debb3b3e79b63f4f1c
       created: 1758295312691
       modified: 1763333981826
       isPrivate: false
@@ -74,7 +73,7 @@ collection:
   - url: "{{ _.baselink }}/movies"
     name: Obtenir JSON en entier 200
     meta:
-      id: req_f138a89772df46c0af8bd86961fd2525
+      id: req_dea72116a72047368455f047c1ce64f3
       created: 1758295807211
       modified: 1763333969168
       isPrivate: false
@@ -95,7 +94,7 @@ collection:
   - url: http://127.0.0.1:3200/moviesbytitle
     name: Obtenir film par titre (The Good Dinosaur)
     meta:
-      id: req_9152b6b2f32a407fa79f43c19e1eb7b0
+      id: req_38e26664e95c4958a6a4497db9df06b2
       created: 1758451269773
       modified: 1758451913741
       isPrivate: false
@@ -103,10 +102,8 @@ collection:
       sortKey: -1758292141987
     method: GET
     parameters:
-      - id: pair_cc07a3fa47424836b8cc7159ec29dcf5
-        name: title
+      - name: title
         value: The Good Dinosaur
-        description: ""
         disabled: false
     headers:
       - name: User-Agent
@@ -122,7 +119,7 @@ collection:
   - url: "{{ _.baselink }}/movies/:id"
     name: Obtenir film par id 500 (incorrect)
     meta:
-      id: req_93df40ea706742b496c61201fbeee644
+      id: req_f131bd8da16947eeb76ea9be9dfc4768
       created: 1758451436511
       modified: 1763333988909
       isPrivate: false
@@ -146,7 +143,7 @@ collection:
   - url: "{{ _.baselink }}/moviesbytitle"
     name: Obtenir film par titre 500 (incorrect)
     meta:
-      id: req_6aab3cc3b8034ba998f3a32cbf5880a0
+      id: req_e72f140e49274a15992f9486a3ca62b4
       created: 1758451533806
       modified: 1758547932091
       isPrivate: false
@@ -154,10 +151,8 @@ collection:
       sortKey: -1758290556635
     method: GET
     parameters:
-      - id: pair_cc07a3fa47424836b8cc7159ec29dcf5
-        name: title
+      - name: title
         value: The Bad Dinosaur
-        description: ""
         disabled: false
     headers:
       - name: User-Agent
@@ -173,7 +168,7 @@ collection:
   - url: "{{ _.baselink }}/movies/:id"
     name: Ajouter nouveau film 200
     meta:
-      id: req_39cd6a5b3f2e46099115634e053c2cd6
+      id: req_c2775ed035ad44259fdf3b1a03fb4e38
       created: 1758451568640
       modified: 1763498234635
       isPrivate: false
@@ -190,10 +185,8 @@ collection:
           "id":"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxx"
         }
     parameters:
-      - id: pair_f10fd043dc6c4ec089b426d2fdec0aa8
-        name: uid
+      - name: uid
         value: michael_scott
-        description: ""
         disabled: false
     headers:
       - name: Content-Type
@@ -214,7 +207,7 @@ collection:
   - url: http://127.0.0.1:3200/movies/:id
     name: Obtenir film par id 200 (Test)
     meta:
-      id: req_389766f1900a4cfaa10d895ac6b10d28
+      id: req_ad5d881b18744fbaa05573b12857e9f5
       created: 1758451789937
       modified: 1758452142658
       isPrivate: false
@@ -238,7 +231,7 @@ collection:
   - url: "{{ _.baselink }}/movies/:id"
     name: Supprimer test 200 (Test)
     meta:
-      id: req_1a94bda2a6b7416d9ee869cb6106eb11
+      id: req_78fd3555ad4347148c9721c46d217c5b
       created: 1758452077626
       modified: 1763497617013
       isPrivate: false
@@ -246,10 +239,8 @@ collection:
       sortKey: -1758288971183
     method: DELETE
     parameters:
-      - id: pair_8aa1c69eb8c24cb4b4661e2eda80f3c8
-        name: uid
+      - name: uid
         value: michael_scott
-        description: ""
         disabled: false
     headers:
       - name: User-Agent
@@ -268,7 +259,7 @@ collection:
   - url: "{{ _.baselink }}/movies/:id"
     name: Ajouter nouveau film 403 (pas de uid)
     meta:
-      id: req_b9ec510cab0e4e09bc3d636620ca0d9a
+      id: req_47ec45f2669445e2bff1ce9df84ac56c
       created: 1763334166279
       modified: 1763497565469
       isPrivate: false
@@ -284,12 +275,6 @@ collection:
           "director": "Someone",
           "id":"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxx"
         }
-    parameters:
-      - id: pair_382162c893d6456cba3bfa2876812c8b
-        name: ""
-        value: ""
-        description: ""
-        disabled: false
     headers:
       - name: Content-Type
         value: application/json
@@ -309,7 +294,7 @@ collection:
   - url: "{{ _.baselink }}/movies/:id"
     name: Ajouter nouveau film 403 (user non admin)
     meta:
-      id: req_b63b9a98270e4ef197a5f63c114969cf
+      id: req_b00bf41bb4194099902486f3cc530915
       created: 1763334184292
       modified: 1763498217455
       isPrivate: false
@@ -326,10 +311,8 @@ collection:
           "id":"xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxx"
         }
     parameters:
-      - id: pair_0ba26d7cdca44da6ae000d034f225cfb
-        name: uid
+      - name: uid
         value: chris_rivers
-        description: ""
         disabled: false
     headers:
       - name: Content-Type
@@ -350,13 +333,13 @@ collection:
 cookieJar:
   name: Default Jar
   meta:
-    id: jar_780a84de74397ee1c75cad08ce5d862ed1af5117
+    id: jar_a5142ce4d6544270be64f764c980774c
     created: 1758288971187
     modified: 1758288971187
 environments:
   name: Base Environment
   meta:
-    id: env_780a84de74397ee1c75cad08ce5d862ed1af5117
+    id: env_ee142ed4cb4a455b91b637a91f53ca5c
     created: 1758288971185
     modified: 1758451694579
     isPrivate: false
