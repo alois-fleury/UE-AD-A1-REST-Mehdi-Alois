@@ -11,21 +11,14 @@ if parent_dir not in sys.path:
 app = Flask(__name__)
 
 from checkAdmin import checkAdmin
+from db import get_db
+from dotenv import load_dotenv
+load_dotenv()
 
 PORT = 3200
 HOST = '0.0.0.0'
-BASE_DIR = os.path.dirname(os.path.abspath(__file__)) 
-DB_PATH = os.path.join(BASE_DIR, "databases", "movies.json")
 
-with open(DB_PATH, 'r') as jsf:
-    movies = json.load(jsf)["movies"]
-    print(movies)
-
-def write(movies):
-    with open(DB_PATH, 'w') as f:
-        full = {}
-        full['movies']=movies
-        json.dump(full, f)
+db = get_db()
 
 # root message
 @app.route("/", methods=['GET'])
@@ -35,15 +28,33 @@ def home():
 # GET all movies
 @app.route("/movies", methods=["GET"])
 def get_movies():
+    movies = db.load()
     return jsonify(movies)
 
 # GET one movie by id
 @app.route("/movies/<movie_id>", methods=["GET"])
 def get_movie(movie_id):
+    movies = db.load()
     for m in movies:
         if m["id"] == movie_id:
             return jsonify(m)
     return make_response(jsonify({"error": "Movie not found"}), 404)
+
+@app.route("/moviesbytitle", methods=['GET'])
+def get_movie_bytitle():
+    movies = db.load()
+    json = ""
+    if request.args:
+        req = request.args
+        for movie in movies:
+            if str(movie["title"]) == str(req["title"]):
+                json = movie
+
+    if not json:
+        res = make_response(jsonify({"error":"movie title not found"}),500)
+    else:
+        res = make_response(jsonify(json),200)
+    return res
 
 @app.route("/movies/<movieid>", methods=['POST'])
 def add_movie(movieid):
@@ -51,7 +62,7 @@ def add_movie(movieid):
 
     if not (checkAdmin(request.args.get("uid"))):
         return jsonify({"error": "Unauthorized"}), 403
-
+    movies = db.load()
     for movie in movies:
         if str(movie["id"]) == str(movieid):
             print(movie["id"])
@@ -59,7 +70,7 @@ def add_movie(movieid):
             return make_response(jsonify({"error":"movie ID already exists"}),500)
 
     movies.append(req)
-    write(movies)
+    db.write(movies)
     res = make_response(jsonify({"message":"movie added"}),200)
     return res
 
@@ -68,15 +79,15 @@ def update_movie_rating(movieid):
 
     if not (checkAdmin(request.args.get("uid"))):
         return jsonify({"error": "Unauthorized"}), 403
-    
+    movies = db.load()
     req = request.get_json()
     
     for movie in movies:
         if str(movie["id"]) == str(movieid):
-            movie["rating"] = req.get("rating")
+            movie["rating"] = float(req.get("rating"))
             movie["title"] = req.get("title")
             res = make_response(jsonify(movie),200)
-            write(movies)
+            db.write(movies)
             return res
 
     res = make_response(jsonify({"error":"movie ID not found"}),500)
@@ -87,7 +98,7 @@ def del_movie(movieid):
 
     if not (checkAdmin(request.args.get("uid"))):
         return jsonify({"error": "Unauthorized"}), 403
-        
+    movies = db.load()
     for movie in movies:
         if str(movie["id"]) == str(movieid):
             movies.remove(movie)

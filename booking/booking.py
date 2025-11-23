@@ -9,35 +9,45 @@ if parent_dir not in sys.path:
     sys.path.append(parent_dir)
 
 from checkAdmin import checkAdmin
+from db import get_db
+from dotenv import load_dotenv
+load_dotenv()
 
 app = Flask(__name__)
 
 PORT = 3201
 HOST = '0.0.0.0'
+MOVIE_SERVICE_URL=os.getenv("MOVIE_SERVICE_URL", "http://127.0.0.1:3200")
+SCHEDULE_SERVICE_URL = os.getenv("SCHEDULE_SERVICE_URL", "http://127.0.0.1:3202")
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__)) 
-DB_PATH = os.path.join(BASE_DIR, "databases", "bookings.json")
-
-with open(DB_PATH, "r") as jsf:
-   bookings = json.load(jsf)["bookings"]
+db = get_db()
 
 @app.route("/", methods=['GET'])
 def home():
    return "<h1 style='color:blue'>Welcome to the Booking service!</h1>"
 
-def write(bookings):
-    with open(DB_PATH, 'w') as f:
-        json.dump({"bookings": bookings}, f, indent=2)
-
 @app.route("/bookings", methods=["GET"])
 def get_bookings():
+    bookings = db.load()
     return jsonify(bookings)
 
 @app.route("/bookings/<userid>", methods=["GET"])
 def get_booking(userid):
-    for b in bookings:
-        if b["userid"] == userid:
-            return jsonify(b)
+    bookings = db.load()
+    for booking in bookings:
+        if booking["userid"] == userid:
+            dates_with_details = []
+            for date in booking.get("dates"):
+                movies_details = []
+                for movie_id in date.get("movies", []):
+                    resp = requests.get(f"{MOVIE_SERVICE_URL}/movies/{movie_id}")
+                    if resp.status_code == 200:
+                        movies_details.append(resp.json())
+                dates_with_details.append({
+                    "date": date["date"],
+                    "movies": movies_details
+                })
+            return jsonify({"dates": dates_with_details})
     return make_response(jsonify({"error": "Booking not found"}), 404)
 
 @app.route("/bookings/<userid>", methods=['POST'])
@@ -46,11 +56,24 @@ def add_booking(userid):
 
     if (userid != request.args.get("uid")) and (not checkAdmin(request.args.get("uid"))) :
         return jsonify({"error": "Unauthorized"}), 403
-    
+    bookings = db.load()
+
+    # On considère qu'un utilisateur réserve pour aller voir un film à la fois
+    incoming_date = req["dates"][0]["date"] # On prend arbitrairement le premier élément du tableau dates
+    incoming_movies = req["dates"][0]["movies"]
+    scheduled_response = requests.get(f"{SCHEDULE_SERVICE_URL}/schedule/{incoming_date}")
+    scheduled = scheduled_response.json()
+    if (not scheduled) or (scheduled.get("date", "") == ""):
+        return make_response({"error": "No film scheduled on this date"}, 409)
+
+    # Vérifie si le film est prévu à la date donnée
+    scheduled_movie_ids = scheduled.get("movies", [])
+    for movie_id in incoming_movies:
+        if movie_id not in scheduled_movie_ids:
+            return make_response({"error": "Film not scheduled for the requested date"}, 409)
+
     for booking in bookings:
         if booking["userid"] == userid:
-            incoming_date = req["dates"][0]["date"] # On prend arbitrairement le premier élément du tableau dates
-            incoming_movies = req["dates"][0]["movies"]
 
             for existing_date_obj in booking["dates"]:
                 if existing_date_obj["date"] == incoming_date:
@@ -65,7 +88,7 @@ def add_booking(userid):
         req["userid"] = userid
         bookings.append(req)
 
-    write(bookings)
+    db.write(bookings)
     return make_response(jsonify({"message": "booking added"}), 200)
 
 @app.route("/bookings/<userid>", methods=['DELETE'])
@@ -75,13 +98,13 @@ def del_booking(userid):
 
     if (userid != request.args.get("uid")) and (not checkAdmin(request.args.get("uid"))) :
         return jsonify({"error": "Unauthorized"}), 403
-
+    bookings = db.load()
     for booking in bookings:
         if booking["userid"] == userid:
             # Suppression complète de l'utilisateur si les paramètres sont absents
             if not incoming_date and not movieid:
                 bookings.remove(booking)
-                write(bookings)
+                db.write(bookings)
                 return make_response(jsonify(booking), 200)
 
             # Suppression d'un film pour une date donnée
@@ -110,7 +133,7 @@ def del_booking(userid):
                             if not booking["dates"]:
                                 bookings.remove(booking)
 
-                            write(bookings)
+                            db.write(bookings)
                             return make_response(jsonify(deleted_obj), 200)
                         else:
                             return make_response(jsonify({"error": f"Movie {movieid} not found for date {incoming_date}"}), 404)

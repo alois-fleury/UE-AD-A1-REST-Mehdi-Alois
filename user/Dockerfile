@@ -1,16 +1,19 @@
-FROM python
-# can you find a lighter image?
+FROM python:3.13-slim
 
 WORKDIR /app
 
 # copy the requirements file in the workdir
-RUN
+COPY requirements.txt .
 
 # install the Python requirements
-RUN
+RUN pip install --no-cache-dir -r requirements.txt 
 
 # copy the app files and directories
-RUN
+COPY user/ .
+
+# copie le fichier checkAdmin
+COPY checkAdmin.py .
+COPY .env .
 
 # start user.py when the container is started
-CMD 
+CMD ["python", "user.py"]

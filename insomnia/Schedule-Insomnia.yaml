@@ -1,15 +1,16 @@
 type: collection.insomnia.rest/5.0
-name: TP1-Schedule
+schema_version: "5.1"
+name: TP-REST-Schedule
 meta:
-  id: wrk_c1b2659d789648e3a791fa9252fadbd1
-  created: 1758548460090
-  modified: 1758548460090
+  id: wrk_2afe8a1716b24767849b632342dfefdb
+  created: 1763586379463
+  modified: 1763867070539
   description: ""
 collection:
   - url: "{{ _.baselink }}/schedule"
     name: Obtenir le JSON en entier 200
     meta:
-      id: req_80dad7c4cc1b43a6a2a19a8c9819e371
+      id: req_246cbfa6441e4013bba06591fcffc984
       created: 1758548520873
       modified: 1763497229593
       isPrivate: false
@@ -30,7 +31,7 @@ collection:
   - url: "{{ _.baselink }}/schedule/:date"
     name: Obtenir jour par date 200 (30/11/2015)
     meta:
-      id: req_c9a5b8ab8a7845e5ae07a37676b4c4f9
+      id: req_11b558b74a0149749dd7b35ed8e087d0
       created: 1758548698610
       modified: 1758548848109
       isPrivate: false
@@ -54,7 +55,7 @@ collection:
   - url: "{{ _.baselink }}/schedule/:date"
     name: Obtenir jour par date 500 (incorrect)
     meta:
-      id: req_1a5ab5fd59b94ce9a0ff7afa8a15662a
+      id: req_47bf2e7b16f048e1a52e074750434be3
       created: 1758548868751
       modified: 1758548883364
       isPrivate: false
@@ -78,9 +79,9 @@ collection:
   - url: "{{ _.baselink }}/schedule/:day"
     name: Ajouter nouveau jour 200
     meta:
-      id: req_2e272e0fe53c44768f955df34b493dca
+      id: req_f5f83ea1eab845439bb6b75574b25494
       created: 1758549052593
-      modified: 1763497494781
+      modified: 1763590488020
       isPrivate: false
       description: ""
       sortKey: -1758548520623
@@ -94,13 +95,11 @@ collection:
               "96798c08-d19b-4986-a05d-7da856efb697",
               "267eedb8-0f5d-42d5-8f43-72426b9fb3e6",
               "39ab85e5-5e8e-4dc5-afea-65dc368bd7ab"
-           ],
+           ]
         }
     parameters:
-      - id: pair_276d196cfbc548818ced7cf1e9d1108f
-        name: uid
+      - name: uid
         value: michael_scott
-        description: ""
         disabled: false
     headers:
       - name: Content-Type
@@ -121,7 +120,7 @@ collection:
   - url: "{{ _.baselink }}/schedule/:date"
     name: Obtenir jour par date 200 (22/09/2025)
     meta:
-      id: req_fe3b52dc331f4d0390612254dc8fb001
+      id: req_206543cfab5f4025820048ee2e08144d
       created: 1758549630170
       modified: 1758550268081
       isPrivate: false
@@ -145,7 +144,7 @@ collection:
   - url: "{{ _.baselink }}/schedule/:date"
     name: Supprimer date 200 (22/09/2025)
     meta:
-      id: req_fd68e79503424b849351cb7bc0336204
+      id: req_d686b53c6b4844b1a4311c1ac1865ec1
       created: 1758549670858
       modified: 1763497387238
       isPrivate: false
@@ -153,10 +152,8 @@ collection:
       sortKey: -1758548520423
     method: DELETE
     parameters:
-      - id: pair_b5f00777f6e24810b9478e515c3e14f8
-        name: uid
+      - name: uid
         value: michael_scott
-        description: ""
         disabled: false
     headers:
       - name: User-Agent
@@ -172,16 +169,57 @@ collection:
     pathParameters:
       - name: date
         value: "20250922"
+  - url: "{{ _.baselink }}/schedule/:day"
+    name: Ajouter nouveau jour film inexistant 409
+    meta:
+      id: req_fd5e5be8f9e14399ab6c6c2165177e45
+      created: 1763866342996
+      modified: 1763866467295
+      isPrivate: false
+      description: ""
+      sortKey: -1758548520573
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+           "date":"20251025",
+           "movies":[
+              "96798c08-d19b-4986-a05d-7da856efb697",
+              "267eedb8-ffff-ffff-ffff-fff26b9fb3e6",
+              "39ab85e5-5e8e-4dc5-afea-65dc368bd7ab"
+           ]
+        }
+    parameters:
+      - name: uid
+        value: michael_scott
+        disabled: false
+    headers:
+      - name: Content-Type
+        value: application/json
+      - name: User-Agent
+        value: insomnia/11.6.1
+    settings:
+      renderRequestBody: true
+      encodeUrl: true
+      followRedirects: global
+      cookies:
+        send: true
+        store: true
+      rebuildPath: true
+    pathParameters:
+      - name: day
+        value: "20251025"
 cookieJar:
   name: Default Jar
   meta:
-    id: jar_80fdae665c402dff8da1ce0e483d2d1c65706741
+    id: jar_73e844babf8846c0b0433007edd068c5
     created: 1758548460116
     modified: 1758548460116
 environments:
   name: Base Environment
   meta:
-    id: env_80fdae665c402dff8da1ce0e483d2d1c65706741
+    id: env_4cd2558e2b514ace84aa6531443adb94
     created: 1758548460100
     modified: 1758548489243
     isPrivate: false
