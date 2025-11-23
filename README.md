@@ -37,10 +37,8 @@ Il faut se placer à la racine du projet et faire la commande
 
 L'architecture suivie est en microservices et son schéma est le suivant : 
 
-![Schéma de l'architecure du projet](images/schema-architecture-projet.png)
+![Schéma de l'architecure du projet](./images/schema-architecture-projet.png)
 
 ## Tests et exemples
 
 Les tests ont été réalisés sur Insomnia (voir dossier [./insomnia](./insomnia)).
-
-Pour la première partie ne vous souciez pas des fichiers Docker, cela sera abordé par la suite en séance 4.
